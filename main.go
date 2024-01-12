@@ -1,8 +1,8 @@
 package main
 
 import (
-	"Template-golang/db"
-	"Template-golang/routes"
+	"POS-SRI/db"
+	"POS-SRI/routes"
 )
 
 func main() {

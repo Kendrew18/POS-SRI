@@ -1,8 +1,8 @@
 package template_controller
 
 import (
-	"Template-golang/model/request"
-	"Template-golang/service/template_service"
+	"POS-SRI/model/request"
+	"POS-SRI/service/template_service"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

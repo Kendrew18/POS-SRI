@@ -1,7 +1,7 @@
 package db
 
 import (
-	"Template-golang/config"
+	"POS-SRI/config"
 	"database/sql"
 	"fmt"
 

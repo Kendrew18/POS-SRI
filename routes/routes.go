@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"Template-golang/controller/template_controller"
+	"POS-SRI/controller/template_controller"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

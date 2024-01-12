@@ -1,4 +1,4 @@
-module Template-golang
+module POS-SRI
 
 go 1.18
 

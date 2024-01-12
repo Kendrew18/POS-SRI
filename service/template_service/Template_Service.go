@@ -1,8 +1,8 @@
 package template_service
 
 import (
-	"Template-golang/model/request"
-	"Template-golang/model/response"
+	"POS-SRI/model/request"
+	"POS-SRI/model/response"
 )
 
 func Template_Service(Request request.Request) (response.Response, error) {
