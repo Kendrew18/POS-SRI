@@ -47,3 +47,9 @@ func Input_Jenis_Barang(Request request.Input_Jenis_Barang_Request) (response.Re
 
 	return res, nil
 }
+
+func Read_Jenis_Pembayaran(Request request.Input_Jenis_Barang_Request) (response.Response, error) {
+	var res response.Response
+
+	return res, nil
+}

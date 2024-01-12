@@ -2,7 +2,6 @@ package request
 
 type Input_Grade_Barang_Request struct {
 	Kode_jenis_barang string `json:"kode_jenis_barang"`
-	Kode_grade_barang string `json:"kode_grade_barang"`
 	Nama_grade_barang string `json:"nama_grade_barang"`
 }
 
