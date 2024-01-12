@@ -1,7 +1,9 @@
 package routes
 
 import (
-	"POS-SRI/controller/template_controller"
+	"POS-SRI/controller/grade_barang"
+	"POS-SRI/controller/jenis_barang"
+	"POS-SRI/controller/user"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -14,13 +16,20 @@ func Init() *echo.Echo {
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Project-NDL")
+		return c.String(http.StatusOK, "Project-SRI")
 	})
 
-	TMP := e.Group("/TMP")
+	//User
+	US := e.Group("/US")
+	US.GET("/login", user.Login)
 
-	//NDL
-	TMP.GET("/template", template_controller.Template_Controller)
+	//Jenis Barang
+	JB := e.Group("/JB")
+	JB.POST("/jenis-barang", jenis_barang.InputJenisBarang)
+
+	//Grade Barang
+	GB := e.Group("/GB")
+	GB.POST("/grade-barang", grade_barang.InputGradeBarang)
 
 	return e
 }
