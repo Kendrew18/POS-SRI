@@ -1,8 +1,8 @@
-package jenis_barang
+package barang
 
 import (
 	"POS-SRI/model/request"
-	"POS-SRI/service/jenis_barang"
+	"POS-SRI/service/barang"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -13,7 +13,7 @@ func InputJenisBarang(c echo.Context) error {
 	Request.Nama_barang = c.FormValue("nama_barang")
 	Request.Kode_gudang = c.FormValue("kode_gudang")
 
-	result, err := jenis_barang.Input_Jenis_Barang(Request)
+	result, err := barang.Input_Jenis_Barang(Request)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
