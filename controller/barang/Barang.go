@@ -10,7 +10,7 @@ import (
 
 func InputJenisBarang(c echo.Context) error {
 	var Request request.Input_Jenis_Barang_Request
-	Request.Nama_jenis_barang = c.FormValue("nama_jenis_barang")
+	Request.Nama_barang = c.FormValue("nama_barang")
 	Request.Kode_gudang = c.FormValue("kode_gudang")
 
 	result, err := jenis_barang.Input_Jenis_Barang(Request)

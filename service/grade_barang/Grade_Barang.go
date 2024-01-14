@@ -29,7 +29,7 @@ func Input_Grade_Barang(Request request.Input_Grade_Barang_Request) (response.Re
 
 		RequestV2.Co = co + 1
 		RequestV2.Kode_grade_barang = "GB-" + strconv.Itoa(RequestV2.Co)
-		RequestV2.Kode_jenis_barang = Request.Kode_jenis_barang
+		RequestV2.Kode_barang = Request.Kode_barang
 		RequestV2.Nama_grade_barang = Nama_grade_barang[i]
 
 		fmt.Println(co)
@@ -41,7 +41,7 @@ func Input_Grade_Barang(Request request.Input_Grade_Barang_Request) (response.Re
 			return res, err.Error
 		}
 
-		err = con.Select("co", "kode_jenis_barang", "kode_grade_barang", "nama_jenis_barang").Create(&RequestV2)
+		err = con.Select("co", "kode_barang", "kode_grade_barang", "nama_jenis_barang").Create(&RequestV2)
 
 		if err.Error != nil {
 			res.Status = http.StatusNotFound

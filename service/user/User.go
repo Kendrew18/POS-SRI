@@ -14,14 +14,14 @@ func Login(user request.User_Request) (response.Response, error) {
 	var us response.User_Response
 	con := db.CreateConGorm().Table("user")
 
-	err := con.Select("id_user", "status", "kode_gudang").Where("username =? AND password =?", user.Username, user.Password).Scan(&us).Error
+	err := con.Select("kode_user", "status", "kode_gudang").Where("username =? AND password =?", user.Username, user.Password).Scan(&us).Error
 
 	fmt.Println(err)
 
-	if err != nil || us.Id_user == "" {
+	if err != nil || us.Kode_user == "" {
 		res.Status = http.StatusNotFound
 		res.Message = "Status Not Found"
-		us.Id_user = ""
+		us.Kode_user = ""
 		res.Data = us
 
 	} else {

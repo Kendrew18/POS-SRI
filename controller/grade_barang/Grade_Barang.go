@@ -11,7 +11,7 @@ import (
 func InputGradeBarang(c echo.Context) error {
 	var Request request.Input_Grade_Barang_Request
 	Request.Nama_grade_barang = c.FormValue("nama_grade_barang")
-	Request.Kode_jenis_barang = c.FormValue("kode_jenis_barang")
+	Request.Kode_barang = c.FormValue("kode_barang")
 
 	result, err := grade_barang.Input_Grade_Barang(Request)
 
