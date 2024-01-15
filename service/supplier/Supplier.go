@@ -87,54 +87,54 @@ func Input_Supplier(Request request.Input_Supplier_Request, Request_Barang reque
 	return res, nil
 }
 
-// func Read_Supplier(Request request.Read_Supplier_Request) (response.Response, error) {
+func Read_Supplier(Request request.Read_Supplier_Request) (response.Response, error) {
 
-// 	var res response.Response
-// 	var data []response.Read_Supplier_Response
-// 	var obj_data response.Read_Supplier_Response
+	var res response.Response
+	var data []response.Read_Supplier_Response
+	var obj_data response.Read_Supplier_Response
 
-// 	con := db.CreateConGorm().Table("supplier")
+	con := db.CreateConGorm().Table("supplier")
 
-// 	rows, err := con.Select("kode_supplier", "nama_supplier", "nomor_telpon").Where("kode_gudang = ?", Request.Kode_gudang).Order("supplier.co ASC").Rows()
+	rows, err := con.Select("kode_supplier", "nama_supplier", "nomor_telpon").Where("kode_gudang = ?", Request.Kode_gudang).Order("supplier.co ASC").Rows()
 
-// 	defer rows.Close()
+	defer rows.Close()
 
-// 	if err != nil {
-// 		res.Status = http.StatusNotFound
-// 		res.Message = "Status Not Found"
-// 		res.Data = data
-// 		return res, err
-// 	}
+	if err != nil {
+		res.Status = http.StatusNotFound
+		res.Message = "Status Not Found"
+		res.Data = data
+		return res, err
+	}
 
-// 	for rows.Next() {
-// 		con_barang := db.CreateConGorm().Table("barang_supplier")
-// 		var detail_data []response.Read_Barang_Supplier_Response
-// 		rows.Scan(&obj_data.Kode_supplier, &obj_data.Nama_supplier, &obj_data.Nomor_telpon)
+	for rows.Next() {
+		con_barang := db.CreateConGorm().Table("barang_supplier")
+		var detail_data []response.Read_Barang_Supplier_Response
+		rows.Scan(&obj_data.Kode_supplier, &obj_data.Nama_supplier, &obj_data.Nomor_telpon)
 
-// 		err := con_barang.Select("barang_supplier.kode_barang", "nama_barang").Joins("join stock on barang_supplier.kode_barang = stock.kode_barang").Where("kode_supplier = ?", obj_data.Kode_supplier).Scan(&detail_data).Error
+		err := con_barang.Select("barang_supplier.kode_barang", "nama_barang").Joins("join barang on barang_supplier.kode_barang = barang.kode_barang").Where("kode_supplier = ?", obj_data.Kode_supplier).Scan(&detail_data).Error
 
-// 		if err != nil {
-// 			res.Status = http.StatusNotFound
-// 			res.Message = "Status Not Found"
-// 			res.Data = data
-// 			return res, err
-// 		}
+		if err != nil {
+			res.Status = http.StatusNotFound
+			res.Message = "Status Not Found"
+			res.Data = data
+			return res, err
+		}
 
-// 		obj_data.Barang_supplier = detail_data
+		obj_data.Barang_supplier = detail_data
 
-// 		data = append(data, obj_data)
-// 	}
+		data = append(data, obj_data)
+	}
 
-// 	if data == nil {
-// 		res.Status = http.StatusNotFound
-// 		res.Message = "Status Not Found"
-// 		res.Data = data
+	if data == nil {
+		res.Status = http.StatusNotFound
+		res.Message = "Status Not Found"
+		res.Data = data
 
-// 	} else {
-// 		res.Status = http.StatusOK
-// 		res.Message = "Suksess"
-// 		res.Data = data
-// 	}
+	} else {
+		res.Status = http.StatusOK
+		res.Message = "Suksess"
+		res.Data = data
+	}
 
-// 	return res, nil
-// }
+	return res, nil
+}

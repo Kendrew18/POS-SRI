@@ -18,3 +18,7 @@ type Input_Barang_Supplier_Request_V2 struct {
 	Kode_supplier        string `json:"kode_supplier"`
 	Kode_barang          string `json:"kode_barang"`
 }
+
+type Read_Supplier_Request struct {
+	Kode_gudang string `json:"kode_gudang"`
+}
