@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func Input_Jenis_Barang(Request request.Input_Jenis_Barang_Request) (response.Response, error) {
+func Input_Barang(Request request.Input_Jenis_Barang_Request) (response.Response, error) {
 	var res response.Response
 
 	con := db.CreateConGorm().Table("barang")
@@ -48,7 +48,7 @@ func Input_Jenis_Barang(Request request.Input_Jenis_Barang_Request) (response.Re
 	return res, nil
 }
 
-func Read_Jenis_Barang(Request request.Read_Jenis_Barang_Response) (response.Response, error) {
+func Read_Barang(Request request.Read_Jenis_Barang_Request) (response.Response, error) {
 	var res response.Response
 
 	var jenis_barang []response.Read_Jenis_Barang_Response
@@ -102,6 +102,36 @@ func Read_Jenis_Barang(Request request.Read_Jenis_Barang_Response) (response.Res
 		res.Status = http.StatusOK
 		res.Message = "Suksess"
 		res.Data = jenis_barang
+	}
+
+	return res, nil
+}
+
+func Read_Barang_Stock(Request request.Read_Barang_Stock_Request) (response.Response, error) {
+	var res response.Response
+
+	var arr_barang []response.Read_Barang_Stock_Response
+
+	con := db.CreateConGorm()
+
+	err := con.Table("barang").Select("kode_barang", "nama_barang", "total_berat", "nama_satuan_barang").Joins("JOIN satuan_barang sb on sb.kode_satuan_barang = barang.kode_satuan_barang").Where("kode_gudang=?", Request.Kode_gudang)
+
+	if err.Error != nil {
+		res.Status = http.StatusNotFound
+		res.Message = "Status Not Found"
+		res.Data = Request
+		return res, err.Error
+	}
+
+	if arr_barang == nil {
+		res.Status = http.StatusNotFound
+		res.Message = "Status Not Found"
+		res.Data = arr_barang
+
+	} else {
+		res.Status = http.StatusOK
+		res.Message = "Suksess"
+		res.Data = arr_barang
 	}
 
 	return res, nil

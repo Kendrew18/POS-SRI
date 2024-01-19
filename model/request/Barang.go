@@ -7,6 +7,10 @@ type Input_Jenis_Barang_Request struct {
 	Kode_gudang string `json:"kode_gudang"`
 }
 
-type Read_Jenis_Barang_Response struct {
+type Read_Jenis_Barang_Request struct {
+	Kode_gudang string `json:"kode_gudang"`
+}
+
+type Read_Barang_Stock_Request struct {
 	Kode_gudang string `json:"kode_gudang"`
 }

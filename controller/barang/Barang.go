@@ -8,12 +8,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InputJenisBarang(c echo.Context) error {
+func InputBarang(c echo.Context) error {
 	var Request request.Input_Jenis_Barang_Request
 	Request.Nama_barang = c.FormValue("nama_barang")
 	Request.Kode_gudang = c.FormValue("kode_gudang")
 
-	result, err := barang.Input_Jenis_Barang(Request)
+	result, err := barang.Input_Barang(Request)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
@@ -22,11 +22,24 @@ func InputJenisBarang(c echo.Context) error {
 	return c.JSON(result.Status, result)
 }
 
-func ReadJenisBarang(c echo.Context) error {
-	var Request request.Read_Jenis_Barang_Response
+func ReadBarang(c echo.Context) error {
+	var Request request.Read_Jenis_Barang_Request
 	Request.Kode_gudang = c.FormValue("kode_gudang")
 
-	result, err := barang.Read_Jenis_Barang(Request)
+	result, err := barang.Read_Barang(Request)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(result.Status, result)
+}
+
+func ReadBarangStock(c echo.Context) error {
+	var Request request.Read_Barang_Stock_Request
+	Request.Kode_gudang = c.FormValue("kode_gudang")
+
+	result, err := barang.Read_Barang_Stock(Request)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
