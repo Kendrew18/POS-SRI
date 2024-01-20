@@ -53,3 +53,11 @@ type Update_Pre_order_Request struct {
 type Update_Pre_Order_Kode_Request struct {
 	Kode_barang_pre_order string `json:"kode_barang_pre_order"`
 }
+
+type Update_Status_Pre_Order_Request struct {
+	Status int `json:"status"`
+}
+
+type Kode_Pre_Order_Request struct {
+	Kode_pre_order string `json:"kode_pre_order"`
+}

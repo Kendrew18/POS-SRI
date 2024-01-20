@@ -205,7 +205,7 @@ func Read_Detail_Pre_Order(Request request.Read_Detail_Pre_Order_Request) (respo
 
 	statement := "SELECT pre_order.kode_pre_order, DATE_FORMAT(tanggal, '%d-%m-%Y') AS tanggal, kode_lot, kode_supplier, nama_supplier, sum(berat_barang), pre_order.kode_jenis_pembayaran, nama_jenis_pembayaran, status FROM pre_order JOIN supplier s ON s.kode_supplier = pre_order.kode_supplier JOIN barang_pre_order bpo ON bpo.kode_pre_order = pre_order.kode_pre_order JOIN jenis_pembayaran jp on jp.kode_jenis_pembayaran = pre_order.kode_jenis_pembayaran WHERE pre_order.kode_pre_order = '" + Request.Kode_pre_order + "'"
 
-	statement += " GROUP BY pre_order.kode_pre_order ORDER BY pre_order.co DESC"
+	statement += " GROUP BY pre_order.kode_pre_order ORDER BY pre_order.tanggal DESC"
 
 	rows, err = con.Raw(statement).Rows()
 
@@ -379,143 +379,105 @@ func Delete_Pre_Order(Request request.Update_Pre_Order_Kode_Request) (response.R
 	return res, nil
 }
 
-// func Update_Status_Pre_Order(Request request.Update_Status_Pre_Order_Request, Request_kode request.Kode_Pre_Order_Request) (response.Response, error) {
-// 	var res response.Response
-// 	var err2 error
-// 	con := db.CreateConGorm().Table("pre_order")
-// 	status := -1
+func Update_Status_Pre_Order(Request request.Update_Status_Pre_Order_Request, Request_kode request.Kode_Pre_Order_Request) (response.Response, error) {
+	var res response.Response
+	con := db.CreateConGorm().Table("pre_order")
+	status := -1
 
-// 	err := con.Select("status").Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Scan(&status)
+	err := con.Select("status").Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Scan(&status)
 
-// 	if err.Error != nil {
-// 		res.Status = http.StatusNotFound
-// 		res.Message = "Status Not Found"
-// 		res.Data = Request
-// 		return res, err.Error
-// 	}
+	if err.Error != nil {
+		res.Status = http.StatusNotFound
+		res.Message = "Status Not Found"
+		res.Data = Request
+		return res, err.Error
+	}
 
-// 	if status != 1 {
-// 		if Request.Status == 2 || Request.Status == 0 {
+	if status != 1 {
+		if Request.Status == 2 || Request.Status == 0 {
 
-// 			con := db.CreateConGorm().Table("pre_order")
+			con := db.CreateConGorm().Table("pre_order")
 
-// 			err := con.Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Select("status").Updates(&Request)
+			err := con.Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Select("status").Updates(&Request)
 
-// 			if err.Error != nil {
-// 				res.Status = http.StatusNotFound
-// 				res.Message = "Status Not Found"
-// 				res.Data = Request
-// 				return res, err.Error
-// 			} else {
-// 				res.Status = http.StatusOK
-// 				res.Message = "Suksess"
-// 				res.Data = map[string]int64{
-// 					"rows": err.RowsAffected,
-// 				}
-// 			}
-// 		} else if Request.Status == 1 {
-// 			con := db.CreateConGorm().Table("pre_order")
+			if err.Error != nil {
+				res.Status = http.StatusNotFound
+				res.Message = "Status Not Found"
+				res.Data = Request
+				return res, err.Error
+			} else {
+				res.Status = http.StatusOK
+				res.Message = "Suksess"
+				res.Data = map[string]int64{
+					"rows": err.RowsAffected,
+				}
+			}
+		} else if Request.Status == 1 {
+			con := db.CreateConGorm().Table("pre_order")
 
-// 			err := con.Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Select("status").Updates(&Request)
+			err := con.Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Select("status").Updates(&Request)
 
-// 			if err.Error != nil {
-// 				res.Status = http.StatusNotFound
-// 				res.Message = "Status Not Found"
-// 				res.Data = Request
-// 				return res, err.Error
-// 			}
+			if err.Error != nil {
+				res.Status = http.StatusNotFound
+				res.Message = "Status Not Found"
+				res.Data = Request
+				return res, err.Error
+			}
 
-// 			var Request_Input_stock request.Input_Stock_Masuk_Request
+			var input_qc []request.Input_Quality_Control_Request
 
-// 			err = con.Select("tanggal", "kode_nota", "nama_penanggung_jawab", "kode_gudang").Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Scan(&Request_Input_stock)
+			err = con.Select("kode_lot", "bpo.kdoe_pre_order", "kode_supplier", "kode_barang", "berat_barang", "kode_gudang").Joins("JOIN barang_pre_order bpo ON bpo.kode_pre_order = pre_order.kode_pre_order ").Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Scan(input_qc)
 
-// 			if err.Error != nil {
-// 				res.Status = http.StatusNotFound
-// 				res.Message = "Status Not Found"
-// 				res.Data = Request
-// 				return res, err.Error
-// 			}
+			if err.Error != nil {
+				res.Status = http.StatusNotFound
+				res.Message = "Status Not Found"
+				res.Data = Request
+				return res, err.Error
+			}
 
-// 			err = con.Select("kode_supplier").Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Scan(&Request_Input_stock.Kode)
+			for i := 0; i < len(input_qc); i++ {
 
-// 			if err.Error != nil {
-// 				res.Status = http.StatusNotFound
-// 				res.Message = "Status Not Found"
-// 				res.Data = Request
-// 				return res, err.Error
-// 			}
+				con_qc := db.CreateConGorm().Table("quality_control")
 
-// 			fmt.Println(Request_Input_stock.Kode)
-// 			fmt.Println(Request_Input_stock)
+				co := 0
 
-// 			var Request_barang []request.Move_Barang_Pre_Order_Request
+				err := con_qc.Select("co").Order("co DESC").Limit(1).Scan(&co)
 
-// 			con_barang := db.CreateConGorm().Table("barang_pre_order")
-// 			err = con_barang.Select("kode_stock", "tanggal_kadaluarsa", "jumlah_barang", "harga").Where("kode_pre_order = ?", Request_kode.Kode_pre_order).Scan(&Request_barang)
+				input_qc[i].Co = co + 1
+				input_qc[i].Kode_quality_control = "QC-" + strconv.Itoa(input_qc[i].Co)
 
-// 			if err.Error != nil {
-// 				res.Status = http.StatusNotFound
-// 				res.Message = "Status Not Found"
-// 				res.Data = Request_barang
-// 				return res, err.Error
-// 			}
+				if err.Error != nil {
+					res.Status = http.StatusNotFound
+					res.Message = "Status Not Found"
+					res.Data = Request
+					return res, err.Error
+				}
 
-// 			fmt.Println(Request_barang)
+				date := time.Now()
+				input_qc[i].Tanggal_masuk = date.Format("2006-01-02")
 
-// 			kode_stock := ""
-// 			tanggal_kadaluarsa := ""
-// 			jumlah_barang := ""
-// 			harga := ""
+				err = con_qc.Select("co", "kode_quality_control", "kode_lot", "tanggal_masuk", "kode_pre_order", "kode_supplier", "kode_barang", "berat_barang", "kode_gudang").Create(&Request)
 
-// 			for i := 0; i < len(Request_barang); i++ {
-// 				kode_stock = kode_stock + "|" + Request_barang[i].Kode_stock + "|"
+				if err.Error != nil {
+					res.Status = http.StatusNotFound
+					res.Message = "Status Not Found"
+					res.Data = Request
+					return res, err.Error
+				}
 
-// 				date, _ := time.Parse("2006-01-02", Request_barang[i].Tanggal_kadaluarsa)
-// 				Request_barang[i].Tanggal_kadaluarsa = date.Format("02-01-2006")
+			}
 
-// 				tanggal_kadaluarsa = tanggal_kadaluarsa + "|" + Request_barang[i].Tanggal_kadaluarsa + "|"
+			res.Status = http.StatusOK
+			res.Message = "Suksess"
+			res.Data = map[string]int64{
+				"rows": err.RowsAffected,
+			}
 
-// 				jumlah_barang = jumlah_barang + "|" + fmt.Sprintf("%f", Request_barang[i].Jumlah_barang) + "|"
-
-// 				harga = harga + "|" + strconv.FormatInt(Request_barang[i].Harga, 10) + "|"
-// 			}
-
-// 			var Request_Barang_V2 request.Input_Barang_Stock_Masuk_Request
-
-// 			Request_Barang_V2.Kode_stock = kode_stock
-// 			Request_Barang_V2.Tanggal_kadalurasa = tanggal_kadaluarsa
-// 			Request_Barang_V2.Jumlah_barang = jumlah_barang
-// 			Request_Barang_V2.Harga_pokok = harga
-
-// 			fmt.Println(Request_Barang_V2)
-
-// 			if err.Error != nil {
-// 				res.Status = http.StatusNotFound
-// 				res.Message = "Status Not Found"
-// 				res.Data = Request
-// 				return res, err.Error
-// 			}
-
-// 			res, err2 = stock_masuk.Input_Stock_Masuk(Request_Input_stock, Request_Barang_V2)
-
-// 			if err2 != nil {
-// 				res.Status = http.StatusNotFound
-// 				res.Message = "Status Not Found"
-// 				res.Data = Request
-// 				return res, err.Error
-// 			} else {
-// 				res.Status = http.StatusOK
-// 				res.Message = "Suksess"
-// 				res.Data = map[string]int64{
-// 					"rows": err.RowsAffected,
-// 				}
-// 			}
-
-// 		}
-// 	} else {
-// 		res.Status = http.StatusNotFound
-// 		res.Message = "Tidah dapat di edit diakrenakan sudah sukses"
-// 		res.Data = Request
-// 	}
-// 	return res, nil
-// }
+		}
+	} else {
+		res.Status = http.StatusNotFound
+		res.Message = "Tidah dapat di edit diakrenakan sudah sukses"
+		res.Data = Request
+	}
+	return res, nil
+}

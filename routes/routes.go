@@ -60,6 +60,7 @@ func Init() *echo.Echo {
 	PO.GET("/detail-pre-order", pre_order.ReadDetailPreOrder)
 	PO.PUT("/pre-order", pre_order.UpdatePreOrder)
 	PO.DELETE("/pre-order", pre_order.DeletePreOrder)
+	PO.PUT("/update-status", pre_order.UpdateStatusPreOrder)
 
 	return e
 }

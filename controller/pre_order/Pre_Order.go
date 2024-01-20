@@ -4,6 +4,7 @@ import (
 	"POS-SRI/model/request"
 	"POS-SRI/service/pre_order"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -88,6 +89,22 @@ func DeletePreOrder(c echo.Context) error {
 	Request.Kode_barang_pre_order = c.FormValue("kode_barang_pre_order")
 
 	result, err := pre_order.Delete_Pre_Order(Request)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(result.Status, result)
+}
+
+func UpdateStatusPreOrder(c echo.Context) error {
+	var Request request.Update_Status_Pre_Order_Request
+	var Request_kode request.Kode_Pre_Order_Request
+
+	Request.Status, _ = strconv.Atoi(c.FormValue("status"))
+	Request_kode.Kode_pre_order = c.FormValue("kode_pre_order")
+
+	result, err := pre_order.Update_Status_Pre_Order(Request, Request_kode)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
