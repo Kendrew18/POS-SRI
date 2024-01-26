@@ -3,10 +3,9 @@ package routes
 import (
 	"POS-SRI/controller/barang"
 	"POS-SRI/controller/grade_barang"
-	"POS-SRI/controller/jenis_pembayaran"
 	"POS-SRI/controller/pre_order"
+	"POS-SRI/controller/quality_control"
 	"POS-SRI/controller/stock_utilitas"
-	"POS-SRI/controller/supplier"
 	"POS-SRI/controller/user"
 	"net/http"
 
@@ -27,7 +26,7 @@ func Init() *echo.Echo {
 	US := e.Group("/US")
 	US.GET("/login", user.Login)
 
-	//Jenis Barang
+	//Barang
 	BR := e.Group("/BR")
 	BR.POST("/barang", barang.InputBarang)
 	BR.GET("/barang", barang.ReadBarang)
@@ -37,21 +36,11 @@ func Init() *echo.Echo {
 	GB := e.Group("/GB")
 	GB.POST("/grade-barang", grade_barang.InputGradeBarang)
 
-	//Supplier
-	SP := e.Group("/SP")
-	SP.POST("/supplier", supplier.InputSupplier)
-	SP.GET("/supplier", supplier.ReadSupplier)
-
 	//Stock Utilitas
 	STU := e.Group("/STU")
 	STU.POST("/stock-utilitas", stock_utilitas.InputStockUtilitas)
-	STU.GET("//stock-utilitas", stock_utilitas.ReadStockUtilitas)
-	STU.PUT("//stock-utilitas", stock_utilitas.UpdateStockUtilitas)
-
-	//Jenis Pembayaran
-	JP := e.Group("/JP")
-	JP.POST("/jenis-pembayaran", jenis_pembayaran.InputJenisPembayaran)
-	JP.GET("/jenis-pembayaran", jenis_pembayaran.ReadJenisPembayaran)
+	STU.GET("/stock-utilitas", stock_utilitas.ReadStockUtilitas)
+	STU.PUT("/stock-utilitas", stock_utilitas.UpdateStockUtilitas)
 
 	//Pre Order
 	PO := e.Group("/PO")
@@ -61,6 +50,13 @@ func Init() *echo.Echo {
 	PO.PUT("/pre-order", pre_order.UpdatePreOrder)
 	PO.DELETE("/pre-order", pre_order.DeletePreOrder)
 	PO.PUT("/update-status", pre_order.UpdateStatusPreOrder)
+
+	//Quality_Control
+	QC := e.Group("/QC")
+	QC.GET("/quality-control", quality_control.ReadQualityControl)
+	QC.PUT("/quality-control", quality_control.UpdateBeratRillQualityControl)
+	QC.GET("/detail", quality_control.ReadDetailQualityControl)
+	QC.PUT("/status", quality_control.UpdateStatusQualityControl)
 
 	return e
 }

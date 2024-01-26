@@ -13,8 +13,8 @@ func InputStockUtilitas(c echo.Context) error {
 	var Request request.Input_Stock_Utilitas_Request
 	Request.Nama_stock_utilitas = c.FormValue("nama_stock_utilitas")
 	Request.Kode_gudang = c.FormValue("kode_gudang")
-	Request.Tanggal = c.FormValue("kode_gudang")
-	Request.Jumlah, _ = strconv.Atoi(c.FormValue("kode_gudang"))
+	Request.Tanggal = c.FormValue("tanggal")
+	Request.Jumlah, _ = strconv.Atoi(c.FormValue("jumlah"))
 
 	result, err := stock_utilitas.Input_Stock_Utilitas(Request)
 
@@ -43,7 +43,7 @@ func UpdateStockUtilitas(c echo.Context) error {
 	var Request_kode request.Update_Stock_Utilitas_Kode_Request
 
 	Request.Nama_stock_utilitas = c.FormValue("nama_stock_utilitas")
-	Request.Jumlah, _ = strconv.Atoi(c.FormValue("kode_gudang"))
+	Request.Jumlah, _ = strconv.Atoi(c.FormValue("jumlah"))
 	Request.Tanggal = c.FormValue("tanggal")
 
 	Request_kode.Kode_stock_utilitas = c.FormValue("kode_stock_utilitas")

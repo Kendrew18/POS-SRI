@@ -30,7 +30,7 @@ func Input_Barang(Request request.Input_Jenis_Barang_Request) (response.Response
 		return res, err.Error
 	}
 
-	err = con.Select("co", "kode_barang", "nama_barang", "kode_gudang").Create(&Request)
+	err = con.Select("co", "kode_barang", "nama_barang", "kode_gudang", "status").Create(&Request)
 
 	if err.Error != nil {
 		res.Status = http.StatusNotFound
@@ -114,7 +114,7 @@ func Read_Barang_Stock(Request request.Read_Barang_Stock_Request) (response.Resp
 
 	con := db.CreateConGorm()
 
-	err := con.Table("barang").Select("kode_barang", "nama_barang", "total_berat", "nama_satuan_barang").Joins("JOIN satuan_barang sb on sb.kode_satuan_barang = barang.kode_satuan_barang").Where("kode_gudang=?", Request.Kode_gudang)
+	err := con.Table("barang").Select("barang.kode_barang", "nama_barang", "SUM(berat_barang) AS total_berat", "nama_satuan").Joins("LEFT JOIN detail_barang db on db.kode_barang = barang.kode_barang").Where("kode_gudang=?", Request.Kode_gudang).Group("barang.kode_barang").Scan(&arr_barang)
 
 	if err.Error != nil {
 		res.Status = http.StatusNotFound

@@ -15,12 +15,12 @@ func InputPreOrder(c echo.Context) error {
 
 	Request.Kode_lot = c.FormValue("kode_lot")
 	Request.Tanggal = c.FormValue("tanggal")
-	Request.Kode_supplier = c.FormValue("kode_supplier")
+	Request.Nama_supplier = c.FormValue("nama_supplier")
 	Request.Tanggal_ETD = c.FormValue("tanggal_etd")
-	Request.Kode_jenis_pembayaran = c.FormValue("kode_jenis_pembayaran")
 	Request.Kode_gudang = c.FormValue("kode_gudang")
 
 	Request_Barang.Kode_barang = c.FormValue("kode_barang")
+	Request_Barang.Kode_grade_barang = c.FormValue("kode_grade_barang")
 	Request_Barang.Berat_barang = c.FormValue("berat_barang")
 	Request_Barang.Harga = c.FormValue("harga")
 
@@ -39,7 +39,7 @@ func ReadPreOrder(c echo.Context) error {
 
 	Request.Kode_gudang = c.FormValue("kode_gudang")
 
-	Request_filter.Kode_supplier = c.FormValue("kode_supplier")
+	Request_filter.Tanggal_etd = c.FormValue("tanggal_etd")
 	Request_filter.Tanggal_awal = c.FormValue("tanggal_awal")
 	Request_filter.Tanggal_akhir = c.FormValue("tanggal_akhir")
 
@@ -71,6 +71,9 @@ func UpdatePreOrder(c echo.Context) error {
 	var Request_kode request.Update_Pre_Order_Kode_Request
 
 	Request.Kode_barang = c.FormValue("kode_barang")
+	Request.Kode_grade_barang = c.FormValue("kode_grade_barang")
+	Request.Berat_barang, _ = strconv.ParseFloat(c.FormValue("berat_barang"), 64)
+	Request.Harga, _ = strconv.ParseInt(c.FormValue("harga"), 10, 64)
 
 	Request_kode.Kode_barang_pre_order = c.FormValue("kode_barang_pre_order")
 

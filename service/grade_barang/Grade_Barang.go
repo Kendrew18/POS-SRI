@@ -5,7 +5,6 @@ import (
 	"POS-SRI/model/request"
 	"POS-SRI/model/response"
 	"POS-SRI/tools"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -18,38 +17,30 @@ func Input_Grade_Barang(Request request.Input_Grade_Barang_Request) (response.Re
 
 	Nama_grade_barang := tools.String_Separator_To_String(Request.Nama_grade_barang)
 
-	for i := 0; i < len(Nama_grade_barang); i++ {
-		var RequestV2 request.Input_Grade_Barang_Request_V2
+	var RequestV2 []request.Input_Grade_Barang_Request_V2
 
-		con := db.CreateConGorm().Table("grade_barang")
+	con := db.CreateConGorm().Table("grade_barang")
 
-		co := 0
+	co := 0
 
-		err = con.Select("co").Order("co DESC").Limit(1).Scan(&co)
+	err = con.Select("co").Order("co DESC").Limit(1).Scan(&co)
 
-		RequestV2.Co = co + 1
-		RequestV2.Kode_grade_barang = "GB-" + strconv.Itoa(RequestV2.Co)
-		RequestV2.Kode_barang = Request.Kode_barang
-		RequestV2.Nama_grade_barang = Nama_grade_barang[i]
-
-		fmt.Println(co)
-
-		if err.Error != nil {
-			res.Status = http.StatusNotFound
-			res.Message = "Status Not Found"
-			res.Data = co
-			return res, err.Error
-		}
-
-		err = con.Select("co", "kode_barang", "kode_grade_barang", "nama_jenis_barang").Create(&RequestV2)
-
-		if err.Error != nil {
-			res.Status = http.StatusNotFound
-			res.Message = "Status Not Found"
-			res.Data = Request
-			return res, err.Error
-		}
+	if err.Error != nil {
+		res.Status = http.StatusNotFound
+		res.Message = "Status Not Found"
+		res.Data = co
+		return res, err.Error
 	}
+
+	for i := 0; i < len(Nama_grade_barang); i++ {
+
+		RequestV2[i].Co = co + 1 + i
+		RequestV2[i].Kode_grade_barang = "GB-" + strconv.Itoa(RequestV2[i].Co)
+		RequestV2[i].Kode_barang = Request.Kode_barang
+		RequestV2[i].Nama_grade_barang = Nama_grade_barang[i]
+	}
+
+	err = con.Select("co", "kode_barang", "kode_grade_barang", "nama_grade_barang").Create(&RequestV2)
 
 	if err.Error != nil {
 		res.Status = http.StatusNotFound

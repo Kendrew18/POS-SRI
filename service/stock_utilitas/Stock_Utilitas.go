@@ -90,7 +90,7 @@ func Update_Stock_Utilitas(Request request.Update_Stock_Utilitas_Request, Reques
 	date, _ := time.Parse("02-01-2006", Request.Tanggal)
 	Request.Tanggal = date.Format("2006-01-02")
 
-	err := con.Where("kode_barang_pre_order = ?", Request_kode.Kode_stock_utilitas).Select("nama_stock_utilitas", "tanggal", "jumlah").Updates(&Request)
+	err := con.Where("kode_stock_utilitas = ?", Request_kode.Kode_stock_utilitas).Select("nama_stock_utilitas", "tanggal", "jumlah").Updates(&Request)
 
 	if err.Error != nil {
 		res.Status = http.StatusNotFound
