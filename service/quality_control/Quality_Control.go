@@ -128,7 +128,7 @@ func Read_Detail_Quality_Control(Request request.Read_Detail_Quality_Control_Req
 
 	err := con.Table("quality_control").Select("kode_quality_control", "kode_lot", "tanggal_masuk", "kode_pre_order", "nama_supplier").Where("kode_quality_control = ?", Request.Kode_quality_control).Scan(&arr_data)
 
-	err = con.Table("barang_quality_control").Select("kode_barang_quality_control", "kode_quality_control", "barang_quality_control.kode_barang", "nama_barang", "berat_barang", "berat_barang_rill", "berat_barang_ditolak", "penyusutan", "persentase", "kadar_air", "harga", "sub_total").Joins("JOIN barang b on b.kode_barang = barang_quality_control.kode_barang").Where("kode_quality_control = ?", Request.Kode_quality_control).Scan(&data)
+	err = con.Table("barang_quality_control").Select("kode_barang_quality_control", "kode_quality_control", "barang_quality_control.kode_barang", "nama_barang", "barang_quality_control.kode_grade_barang", "nama_grade_barang", "berat_barang", "berat_barang_rill", "berat_barang_ditolak", "penyusutan", "persentase", "kadar_air", "harga", "sub_total").Joins("JOIN barang b on b.kode_barang = barang_quality_control.kode_barang").Joins("JOIN grade_barang gb ON gb.kode_grade_barang = barang_quality_control.kode_grade_barang").Where("kode_quality_control = ?", Request.Kode_quality_control).Scan(&data)
 
 	arr_data.Barang_quality_control = data
 

@@ -23,6 +23,8 @@ type Read_Barang_Quality_Control_Response struct {
 	Kode_quality_control        string  `json:"kode_quality_control"`
 	Kode_barang                 string  `json:"kode_barang"`
 	Nama_barang                 string  `json:"nama_barang"`
+	Kode_grade_barang           string  `json:"kode_grade_barang"`
+	Nama_grade_barang           string  `json:"nama_grade_barang"`
 	Berat_barang                float64 `json:"berat_barang"`
 	Berat_barang_rill           float64 `json:"berat_barang_rill"`
 	Berat_barang_ditolak        float64 `json:"berat_barang_ditolak"`

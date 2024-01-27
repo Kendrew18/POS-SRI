@@ -5,6 +5,7 @@ import (
 	"POS-SRI/controller/grade_barang"
 	"POS-SRI/controller/pre_order"
 	"POS-SRI/controller/quality_control"
+	"POS-SRI/controller/stock_masuk"
 	"POS-SRI/controller/stock_utilitas"
 	"POS-SRI/controller/user"
 	"net/http"
@@ -57,6 +58,15 @@ func Init() *echo.Echo {
 	QC.PUT("/quality-control", quality_control.UpdateBeratRillQualityControl)
 	QC.GET("/detail", quality_control.ReadDetailQualityControl)
 	QC.PUT("/status", quality_control.UpdateStatusQualityControl)
+
+	//Stock_Masuk
+	SM := e.Group("/SM")
+	SM.GET("/stock-masuk", stock_masuk.ReadStockMasuk)
+	SM.GET("/detail", stock_masuk.ReadDetailStockMasuk)
+
+	//Sortir
+
+	//Stock Keluar
 
 	return e
 }
