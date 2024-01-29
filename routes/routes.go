@@ -5,6 +5,7 @@ import (
 	"POS-SRI/controller/grade_barang"
 	"POS-SRI/controller/pre_order"
 	"POS-SRI/controller/quality_control"
+	"POS-SRI/controller/sortir"
 	"POS-SRI/controller/stock_masuk"
 	"POS-SRI/controller/stock_utilitas"
 	"POS-SRI/controller/user"
@@ -65,6 +66,11 @@ func Init() *echo.Echo {
 	SM.GET("/detail", stock_masuk.ReadDetailStockMasuk)
 
 	//Sortir
+	SRT := e.Group("/SRT")
+	SRT.PUT("/update-status", sortir.UpdateStatusSortir)
+	SRT.GET("/sortir", sortir.ReadSortir)
+	SRT.GET("/detail", sortir.ReadDetailSortir)
+	SRT.POST("/sortir", sortir.UpdateBeratBarangSetelahSortir)
 
 	//Stock Keluar
 

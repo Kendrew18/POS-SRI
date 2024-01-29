@@ -4,7 +4,6 @@ import (
 	"POS-SRI/db"
 	"POS-SRI/model/request"
 	"POS-SRI/model/response"
-	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -202,8 +201,6 @@ func Update_Status_Quality_Control(Request request.Update_Status_Quality_Control
 
 			err = con.Table("quality_control").Select("kode_lot", "kode_quality_control", "nama_supplier", "kode_gudang").Where("kode_quality_control = ?", Request_kode.Kode_quality_control).Scan(&input_SM)
 
-			fmt.Println(input_SM)
-
 			if err.Error != nil {
 				res.Status = http.StatusNotFound
 				res.Message = "Status Not Found"
@@ -234,11 +231,20 @@ func Update_Status_Quality_Control(Request request.Update_Status_Quality_Control
 
 			err = con.Table("barang_quality_control").Select("kode_barang", "kode_grade_barang", "berat_barang_rill AS berat_barang", "penyusutan", "kadar_air", "harga", "sub_total").Where("kode_quality_control = ?", Request_kode.Kode_quality_control).Order("co ASC").Scan(&input_barang_SM)
 
-			fmt.Println(input_barang_SM)
-
 			co_bSM := 0
 
 			err = con.Table("barang_stock_masuk").Select("co").Order("co DESC").Limit(1).Scan(&co_bSM)
+
+			if err.Error != nil {
+				res.Status = http.StatusNotFound
+				res.Message = "Status Not Found"
+				res.Data = Request
+				return res, err.Error
+			}
+
+			var bskm []request.Input_Barang_Stock_Keluar_Masuk_Request
+
+			err = con.Table("barang_quality_control").Select("kode_barang", "kode_grade_barang", "berat_barang_rill AS berat_barang", "penyusutan", "kadar_air").Where("kode_quality_control = ?", Request_kode.Kode_quality_control).Order("co ASC").Scan(&bskm)
 
 			if err.Error != nil {
 				res.Status = http.StatusNotFound
@@ -253,6 +259,11 @@ func Update_Status_Quality_Control(Request request.Update_Status_Quality_Control
 				input_barang_SM[i].Kode_barang_stock_masuk = "BSM-" + strconv.Itoa(input_barang_SM[i].Co)
 				input_barang_SM[i].Kode_stock_masuk = input_SM.Kode_stock_masuk
 				input_barang_SM[i].Kode_lot = input_SM.Kode_lot
+
+				bskm[i].Kode_barang_keluar_masuk = input_barang_SM[i].Kode_barang_stock_masuk
+				bskm[i].Kode = input_barang_SM[i].Kode_stock_masuk
+				bskm[i].Kode_lot = input_barang_SM[i].Kode_lot
+				bskm[i].Keterangan = "Masuk"
 
 			}
 
@@ -274,9 +285,37 @@ func Update_Status_Quality_Control(Request request.Update_Status_Quality_Control
 				return res, err.Error
 			}
 
+			err = con.Table("detail_barang").Select("co", "kode_barang_stock_masuk", "kode_stock_masuk", "kode_lot", "kode_barang", "kode_grade_barang", "berat_barang", "kadar_air", "penyusutan").Create(&input_barang_SM)
+
+			if err.Error != nil {
+				res.Status = http.StatusNotFound
+				res.Message = "Status Not Found"
+				res.Data = Request
+				return res, err.Error
+			}
+
+			var I_SKM request.Input_Stock_Keluar_Masuk_Request
+
+			co_kode_stock_keluar_masuk := 0
+
+			err = con.Table("stock_keluar_masuk").Select("co").Order("co DESC").Limit(1).Scan(&co_kode_stock_keluar_masuk)
+
+			I_SKM.Co = co_kode_stock_keluar_masuk + 1
+			I_SKM.Kode = input_SM.Kode_stock_masuk
+			I_SKM.Tanggal = input_SM.Tanggal
+
+			err = con.Table("stock_keluar_masuk").Select("co", "kode", "tanggal").Create(&I_SKM)
+
+			if err.Error != nil {
+				res.Status = http.StatusNotFound
+				res.Message = "Status Not Found"
+				res.Data = Request
+				return res, err.Error
+			}
+
 			co_detail := 0
 
-			err = con.Table("detail_barang").Select("co").Order("co DESC").Limit(1).Scan(&co_detail)
+			err = con.Table("barang_stock_keluar_masuk").Select("co").Order("co DESC").Limit(1).Scan(&co_detail)
 
 			if err.Error != nil {
 				res.Status = http.StatusNotFound
@@ -286,10 +325,10 @@ func Update_Status_Quality_Control(Request request.Update_Status_Quality_Control
 			}
 
 			for i := 0; i < len(input_barang_SM); i++ {
-				input_barang_SM[i].Co = co_detail + 1 + i
+				bskm[i].Co = co_detail + 1 + i
 			}
 
-			err = con.Table("detail_barang").Select("co", "kode_barang_stock_masuk", "kode_stock_masuk", "kode_lot", "kode_barang", "kode_grade_barang", "berat_barang", "kadar_air", "penyusutan").Create(&input_barang_SM)
+			err = con.Table("barang_stock_keluar_masuk").Select("co", "kode_barang_keluar_masuk", "kode", "kode_lot", "kode_barang", "kode_grade_barang", "berat_barang", "kadar_air", "penyusutan", "keterangan").Create(&bskm)
 
 			if err.Error != nil {
 				res.Status = http.StatusNotFound

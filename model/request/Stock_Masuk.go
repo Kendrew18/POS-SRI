@@ -37,3 +37,26 @@ type Read_Stock_Masuk_Filter_Request struct {
 type Read_Detail_Stock_Masuk_Request struct {
 	Kode_stock_masuk string `json:"kode_stock_masuk"`
 }
+
+type Input_Stock_Keluar_Masuk_Request struct {
+	Co      int    `json:"co"`
+	Kode    string `json:"kode"`
+	Tanggal string `json:"tanggal"`
+}
+
+type Input_Barang_Stock_Keluar_Masuk_Request struct {
+	Co                       int     `json:"co"`
+	Kode_barang_keluar_masuk string  `json:"kode_barang_keluar_masuk"`
+	Kode                     string  `json:"kode"`
+	Kode_lot                 string  `json:"kode_lot"`
+	Kode_barang              string  `json:"kode_barang"`
+	Kode_grade_barang        string  `json:"kode_grade_barang"`
+	Berat_barang             float64 `json:"berat_barang"`
+	Kadar_air                float64 `json:"kadar_air"`
+	Penyusutan               float64 `json:"penyusutan"`
+	Keterangan               string  `json:"keterangan"`
+}
+
+type Kode_Stock_Masuk_Request struct {
+	Kode_stock_masuk string `json:"kode_stock_masuk"`
+}
