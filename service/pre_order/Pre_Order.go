@@ -52,6 +52,7 @@ func Input_Pre_Order(Request request.Input_Pre_Order_Request, Request_Barang req
 	harga_pokok := tools.String_Separator_To_Int64(Request_Barang.Harga)
 	kode_grade_barang := tools.String_Separator_To_String(Request_Barang.Kode_grade_barang)
 
+	var temp request.Input_Barang_Pre_Order_V2_Request
 	var barang_V2 []request.Input_Barang_Pre_Order_V2_Request
 
 	con_barang := db.CreateConGorm().Table("barang_pre_order")
@@ -69,16 +70,17 @@ func Input_Pre_Order(Request request.Input_Pre_Order_Request, Request_Barang req
 
 	for i := 0; i < len(kode_stock); i++ {
 
-		barang_V2[i].Co = co_barang + 1 + i
-		barang_V2[i].Kode_barang_pre_order = "BPO-" + strconv.Itoa(barang_V2[i].Co)
+		temp.Co = co_barang + 1 + i
+		temp.Kode_barang_pre_order = "BPO-" + strconv.Itoa(temp.Co)
 
-		barang_V2[i].Kode_pre_order = Request.Kode_pre_order
-		barang_V2[i].Kode_barang = kode_stock[i]
-		barang_V2[i].Berat_barang = Berat_barang[i]
-		barang_V2[i].Harga = harga_pokok[i]
-		barang_V2[i].Kode_grade_barang = kode_grade_barang[i]
-		barang_V2[i].Sub_total = int64(math.Round(float64(harga_pokok[i]) * Berat_barang[i]))
+		temp.Kode_pre_order = Request.Kode_pre_order
+		temp.Kode_barang = kode_stock[i]
+		temp.Berat_barang = Berat_barang[i]
+		temp.Harga = harga_pokok[i]
+		temp.Kode_grade_barang = kode_grade_barang[i]
+		temp.Sub_total = int64(math.Round(float64(harga_pokok[i]) * Berat_barang[i]))
 
+		barang_V2 = append(barang_V2, temp)
 	}
 
 	err = con_barang.Select("co", "kode_barang_pre_order", "kode_barang", "kode_grade_barang", "kode_pre_order", "berat_barang", "harga", "sub_total").Create(&barang_V2)

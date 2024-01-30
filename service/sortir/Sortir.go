@@ -126,7 +126,7 @@ func Read_Sortir(Request request.Read_Sortir_Request, Request_filter request.Rea
 
 	err = con.Table("sortir").Select("SUM(penyusutan) AS penyusutan_global").Where("kode_gudang = ? AND sortir.status = 0", Request.Kode_gudang).Scan(&header_sortir).Error
 
-	statement := "SELECT kode_sortir, kode_lot, DATE_FORMAT(tanggal, '%d-%m-%Y') AS tanggal, sortir.kode_barang nama_barang, sortir.kode_grade_barang, nama_grade_barang, berat_barang, berat_setelah_sortir, penyusutan,kode_stock_masuk FROM sortir JOIN barang b on b.kode_barang = sortir.kode_barang JOIN grade_barang gb ON gb.kode_grade_barang = sortir.kode_grade_barang WHERE sortir.kode_gudang = '" + Request.Kode_gudang + "' && sortir.status = 0"
+	statement := "SELECT kode_sortir, kode_lot, DATE_FORMAT(tanggal, '%d-%m-%Y') AS tanggal, sortir.kode_barang, nama_barang, sortir.kode_grade_barang, nama_grade_barang, berat_barang, berat_setelah_sortir, penyusutan,kode_stock_masuk FROM sortir JOIN barang b on b.kode_barang = sortir.kode_barang JOIN grade_barang gb ON gb.kode_grade_barang = sortir.kode_grade_barang WHERE sortir.kode_gudang = '" + Request.Kode_gudang + "' && sortir.status = 0"
 
 	if Request_filter.Kode_lot != "" {
 		statement += " && kode_lot = '" + Request_filter.Kode_lot + "'"
